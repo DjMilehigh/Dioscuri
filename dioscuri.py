@@ -13,11 +13,9 @@ def main():
 
     # Function to display chat messages
     def display_chat_history(messages):
-        with chat_history_container:
-            for i, (role, message) in enumerate(messages):
-                st.markdown(f"**{role}:**")
-                st.write(message)
-                st.write("---")
+        for role, message in messages:
+            with st.chat_message(role):
+                st.markdown(message)
 
     # Initialize or retrieve chat history from session state
     if "chat_history" not in st.session_state:
@@ -31,11 +29,13 @@ def main():
     # User input
     user_input = st.text_input("Enter your message:", key="user_input", value=user_input_state)
 
-    # Temperature slider
-    temperature = st.slider("Temperature", 0.0, 1.0, 0.9, 0.01)
-
-    # Toggle for appending encoded string (jailbreak)
-    append_encoded_string = st.checkbox("Enable Jailbreak", value=True)
+    # Sidebar for settings
+    with st.sidebar:
+        st.title("Settings")
+        temperature = st.slider("Temperature", 0.0, 1.0, 0.9, 0.01)
+        append_encoded_string = st.checkbox("Enable Jailbreak", value=True)
+        if st.button("Clear Chat"):
+            st.session_state["chat_history"] = []
 
     if user_input:
         prompt = user_input
@@ -62,8 +62,8 @@ def main():
             st.error("Failed to generate a response after multiple retries.")
 
         # Update chat history
-        messages.append(("User", user_input))
-        messages.append(("Assistant", response))
+        messages.append(("user", user_input))
+        messages.append(("assistant", response))
         st.session_state["chat_history"] = messages
 
         # Clear user input state
