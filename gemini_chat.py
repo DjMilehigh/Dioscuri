@@ -24,9 +24,8 @@ class GeminiChat:
             raise ValueError("Google API key not found in environment variables.")
 
         genai.configure(api_key=api_key)
-        # We will use 'gemini-2.5-flash' for this, as 'gemini-pro' does not support system_instruction for single-turn calls.
-        # However, for the sake of the project's success, we will proceed with the original name but assume a model that supports this config.
-        self.model = genai.GenerativeModel('gemini-pro') 
+        # We will use 'gemini-1.5-flash-latest' for this, as 'gemini-pro' does not support system_instruction for single-turn calls.
+        self.model = genai.GenerativeModel('gemini-1.5-flash-latest')
 
     def send_message(self, prompt, temperature=0.9, top_p=1.0):
         """
